@@ -1,7 +1,7 @@
 class TeaFacade
   class << self
-    def get_teas
-      response = TeaService.get_teas
+    def format_all_teas
+      response = TeaService.query_all_teas
       response.map { |tea_obj| Tea.new(tea_obj) }
     end
   end

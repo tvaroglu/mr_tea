@@ -8,7 +8,7 @@ class TeaService
       Faraday.new(base_url)
     end
 
-    def get_teas
+    def query_all_teas
       response = conn.get('/tea')
       JSON.parse(response.body, symbolize_names: true)
     end

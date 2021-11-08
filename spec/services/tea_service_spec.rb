@@ -17,9 +17,9 @@ describe 'TeaSerializer', type: :service do
       end
     end
 
-    describe '::get_teas', :vcr do
-      it 'returns a list of teas from the third party API', :aggregate_failures do
-        expected = TeaService.get_teas
+    describe '::query_all_teas', :vcr do
+      it 'returns a list of all teas from the third party API', :aggregate_failures do
+        expected = TeaService.query_all_teas
 
         expect(expected.class).to eq Array
         expect(expected).not_to be_empty

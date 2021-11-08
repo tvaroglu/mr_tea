@@ -17,7 +17,8 @@ describe 'Teas::Index', type: :request do
         json_data.each do |tea_obj|
           expect(tea_obj[:id].class).to eq String
           expect(tea_obj[:type]).to eq 'tea'
-          expect(tea_obj[:attributes].keys.length).to eq 3
+          expect(tea_obj[:attributes].size).to eq 4
+          expect(tea_obj[:attributes][:name].class).to eq String
           expect(tea_obj[:attributes][:description].class).to eq String
           expect(tea_obj[:attributes][:temperature].class).to eq Integer
           expect(tea_obj[:attributes][:brew_time].class).to eq Integer
