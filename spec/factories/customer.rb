@@ -9,3 +9,9 @@ FactoryBot.define do
     zip_code { Faker::Address.zip_code }
   end
 end
+
+def customer_with_subscription
+  FactoryBot.create(:customer) do |customer|
+    FactoryBot.create(:subscription, tea_id: '5fa3fd48d5ba620017ec1c09', customer: customer)
+  end
+end

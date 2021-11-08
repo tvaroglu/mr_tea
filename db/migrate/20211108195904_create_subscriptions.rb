@@ -10,6 +10,8 @@ class CreateSubscriptions < ActiveRecord::Migration[5.2]
       t.integer :status
       t.string :tea_id
       t.references :customer, foreign_key: true
+
+      t.timestamps
     end
   end
 end

@@ -54,6 +54,7 @@ group :test do
   gem 'rspec-rails', '~> 4.0.1'
   gem 'simplecov'
   gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'
   gem 'webmock'
   gem 'vcr'
 end

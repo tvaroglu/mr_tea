@@ -7,7 +7,7 @@ FactoryBot.define do
     price { Faker::Number.decimal(l_digits: 2) }
     frequency { %w[Weekly Monthly Annually].sample }
     status { %w[Active Cancelled].sample }
-    tea_id { Faker::Alphanumeric.alphanumeric(number: 22) }
+    tea_id { Faker::Alphanumeric.alphanumeric(number: 24) }
     customer
   end
 end
