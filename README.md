@@ -24,7 +24,6 @@
 <img src="https://user-images.githubusercontent.com/58891447/140989998-e000a641-cafc-4419-b914-8550f345d069.gif" width=50%/>  
 
 </br>
-</br>
 
 **Mr. Tea** is the final take-home challenge for Mod 4 of 4 for Turing School's Back End Engineering Program.
 
@@ -166,6 +165,7 @@ The `base path` of each endpoint is:
 
 
 <!-- TODO: add JSON contracts (with help of Postman collection) after check-in -->
+<!-- TODO: add schema diagram after check-in -->
 
 
 </br>
