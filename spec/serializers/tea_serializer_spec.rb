@@ -8,10 +8,7 @@ describe 'TeaSerializer', type: :serializer do
           {
             _id: '5fa3fd48d5ba620017ec1c09',
             name: 'green',
-            image: 'uploads/green.png',
             description: 'Rich in antioxidants and reduces inflammation.',
-            keywords: 'aroma, calm, china',
-            origin: 'China',
             brew_time: 2,
             temperature: 80
           }
@@ -21,10 +18,7 @@ describe 'TeaSerializer', type: :serializer do
           {
             _id: '5fa3fdb0d5ba620017ec1c0a',
             name: 'black',
-            image: 'uploads/black.png',
             description: 'Boosts heart health and lowers cholesterol.',
-            keywords: 'bitter, rich, china',
-            origin: 'China',
             brew_time: 3,
             temperature: 85
           }
