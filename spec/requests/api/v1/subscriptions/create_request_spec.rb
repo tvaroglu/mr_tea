@@ -13,12 +13,12 @@ describe 'Subscriptions::Create', type: :request do
 
       let(:tea) do
         Tea.new({
-          _id: '5fa3fd48d5ba620017ec1c09',
-          name: 'green',
-          description: 'Rich in antioxidants and reduces inflammation.',
-          brew_time: 2,
-          temperature: 80
-        })
+                  _id: '5fa3fd48d5ba620017ec1c09',
+                  name: 'green',
+                  description: 'Rich in antioxidants and reduces inflammation.',
+                  brew_time: 2,
+                  temperature: 80
+                })
       end
 
       let(:valid_attributes) do
@@ -54,6 +54,48 @@ describe 'Subscriptions::Create', type: :request do
       end
 
       include_examples 'status code 201'
+    end
+
+    context 'when the customer does not exist' do
+      let(:customer) { create(:customer) }
+      let(:bad_customer_id) { customer.id + 1 }
+      let(:errors) { ["Couldn't find Customer with 'id'=#{bad_customer_id}"] }
+
+      before { post "/api/v1/customers/#{bad_customer_id}/subscriptions", params: {} }
+
+      it 'returns an error that the customer cannot be found', :aggregate_failures do
+        expect(json).not_to be_empty
+        expect(json[:errors]).to eq errors
+      end
+
+      include_examples 'status code 404'
+    end
+
+    context 'when the params are invalid' do
+      let(:customer) { create(:customer) }
+      let(:errors) do
+        [
+          "Tea can't be blank",
+          "Description can't be blank",
+          "Temperature can't be blank",
+          'Temperature is not a number',
+          "Brew time can't be blank",
+          'Brew time is not a number',
+          "Price can't be blank",
+          'Price is not a number',
+          "Frequency can't be blank",
+          "Status can't be blank"
+        ]
+      end
+
+      before { post "/api/v1/customers/#{customer.id}/subscriptions", params: {} }
+
+      it 'returns error messages', :aggregate_failures do
+        expect(json).not_to be_empty
+        expect(json[:errors]).to eq errors
+      end
+
+      include_examples 'status code 422'
     end
   end
 end
