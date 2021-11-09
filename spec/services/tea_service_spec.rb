@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'TeaSerializer', type: :service do
+describe 'TeaService', type: :service do
   describe 'class methods' do
     describe '::base_url' do
       it 'returns the base url for third party API calls', :aggregate_failures do

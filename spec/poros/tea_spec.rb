@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'TeaSerializer', type: :poro do
+describe 'Tea', type: :poro do
   describe 'instance methods' do
     describe '#initialize' do
       context 'when I provide a tea response object' do
