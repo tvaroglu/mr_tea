@@ -66,7 +66,7 @@ describe 'Subscriptions::Update', type: :request do
 
       before { patch "/api/v1/customers/#{customer.id}/subscriptions/#{subscription.id}", params: { status: 'foo' } }
 
-      it 'returns error messages', :aggregate_failures do
+      it 'returns an error messages', :aggregate_failures do
         expect(json).not_to be_empty
         expect(json[:errors]).to eq errors
       end
