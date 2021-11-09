@@ -8,10 +8,7 @@ describe 'Tea', type: :poro do
           {
             _id: '5fa3fd48d5ba620017ec1c09',
             name: 'green',
-            image: 'uploads/green.png',
             description: 'Rich in antioxidants and reduces inflammation.',
-            keywords: 'aroma, calm, china',
-            origin: 'China',
             brew_time: 2,
             temperature: 80
           }

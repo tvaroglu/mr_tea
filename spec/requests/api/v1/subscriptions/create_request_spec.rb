@@ -7,7 +7,7 @@ require 'rails_helper'
 #
 # See spec/support/request_spec_helper.rb for #json and #json_data helpers.
 describe 'Subscriptions::Create', type: :request do
-  describe 'POST /api/v1/customers/:id/subscriptions' do
+  describe 'POST /api/v1/customers/:customer_id/subscriptions' do
     context 'when an existing customer wants to create a new subscription with valid attributes' do
       let(:customer) { create(:customer) }
 
