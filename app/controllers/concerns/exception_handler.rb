@@ -13,7 +13,8 @@ module ExceptionHandler
       )
     end
 
-    # Raised by ActiveRecord::Base#save! and ActiveRecord::Base#create! when the record is invalid.
+    # Raised by ActiveRecord::Base#save! and ActiveRecord::Base#create!
+    # when the record is invalid.
     rescue_from ActiveRecord::RecordInvalid do |e|
       json_response(
         {
