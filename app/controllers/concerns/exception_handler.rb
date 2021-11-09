@@ -23,5 +23,16 @@ module ExceptionHandler
         :unprocessable_entity
       )
     end
+
+    # Raised by ActiveRecord::Base#save! and ActiveRecord::Base#create!
+    # when the argument is invalid.
+    rescue_from ArgumentError do |e|
+      json_response(
+        {
+          errors: [e.message]
+        },
+        :unprocessable_entity
+      )
+    end
   end
 end

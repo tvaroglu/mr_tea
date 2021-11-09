@@ -12,6 +12,6 @@ end
 
 def customer_with_subscription
   FactoryBot.create(:customer) do |customer|
-    FactoryBot.create(:subscription, tea_id: '5fa3fd48d5ba620017ec1c09', customer: customer)
+    FactoryBot.create(:subscription, tea_id: '5fa3fd48d5ba620017ec1c09', status: 'Active', customer: customer)
   end
 end
