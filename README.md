@@ -40,9 +40,8 @@ Project specs:
 - [Technical Requirements](https://mod4.turing.edu/projects/take_home/take_home_be)
 - [Evaluation Rubric](https://mod4.turing.edu/projects/take_home/take_home_rubric)
 
-</br>
 
-#### <ins>Framework</ins>
+### <ins>Framework</ins>
 <p>
   <img src="https://img.shields.io/badge/Ruby%20On%20Rails-b81818.svg?&style=flat&logo=rubyonrails&logoColor=white" />
 </p>
@@ -167,7 +166,7 @@ The `base path` of each endpoint is:
 <!-- TODO: add JSON contracts (with help of Postman collection) after check-in -->
 
 ### Schema Diagram
-<img src="https://user-images.githubusercontent.com/58891447/141157680-59fc564c-c0fb-46fe-8dd9-9cb5384b6f53.png" width=95%>
+<img src="https://user-images.githubusercontent.com/58891447/141157680-59fc564c-c0fb-46fe-8dd9-9cb5384b6f53.png" width=100%>
 
 
 </br>
