@@ -24,7 +24,6 @@
 <img src="https://user-images.githubusercontent.com/58891447/140989998-e000a641-cafc-4419-b914-8550f345d069.gif" width=50%/>  
 
 </br>
-</br>
 
 **Mr. Tea** is the final take-home challenge for Mod 4 of 4 for Turing School's Back End Engineering Program.
 
@@ -159,13 +158,16 @@ The `base path` of each endpoint is:
 /api/v1
 ```
 
-- For `GET` requests, you can send the endpoint requests through your internet browser, or utilize an API client (i.e. [Postman](https://www.postman.com/))
-- For `POST` requests, you will need to use an API client to provide the required request body
+- For `GET` requests, you can send the requests through your internet browser, or utilize an API client (i.e. [Postman](https://www.postman.com/))
+- For `POST` or `PATCH` requests, you will need to use an API client to provide the required request body
 <!-- TODO: add Postman collection after check-in -->
 - A fully functional [Postman collection](#) is included with this repository, to further assist with UAT and endpoint exploration
 
 
 <!-- TODO: add JSON contracts (with help of Postman collection) after check-in -->
+
+### Schema Diagram
+<img src="https://user-images.githubusercontent.com/58891447/141157680-59fc564c-c0fb-46fe-8dd9-9cb5384b6f53.png" width=95%>
 
 
 </br>
