@@ -1,0 +1,549 @@
+{
+	"info": {
+		"_postman_id": "baa3b1eb-755b-4bb2-9cb2-5242672a13e6",
+		"name": "Endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tea Endpoint",
+			"item": [
+				{
+					"name": "GET /teas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful GET Request\", function () {",
+									"    pm.expect(pm.response.code).to.eql(200);",
+									"});",
+									"",
+									"pm.test(\"JSON Response Validation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['data']).not.to.be.null;",
+									"    // Call .forEach on JSON 'data' array to iterate through objects:",
+									"    jsonData['data'].forEach(function(t) {",
+									"        pm.expect(t['id']).not.to.be.null;",
+									"        pm.expect(t['type']).to.eql('tea');",
+									"        // assign variable alias for 'attributes' property:",
+									"        var attributes = t['attributes'];",
+									"        pm.expect(Object.keys(attributes).length).to.eql(4);",
+									"        pm.expect(attributes['name']).not.to.be.null;",
+									"        pm.expect(attributes['description']).not.to.be.null;",
+									"        pm.expect(attributes['temperature']).not.to.be.null;",
+									"        pm.expect(attributes['brew_time']).not.to.be.null;",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/teas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"teas"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription Endpoints",
+			"item": [
+				{
+					"name": "POST /subscriptions",
+					"item": [
+						{
+							"name": "Happy Path",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var getRequest = {",
+											"    url: `${pm.environment.get(\"base_url\")}/api/v1/teas`,",
+											"    method: 'GET',",
+											"    header: {",
+											"        'Content-Type': 'application/json',",
+											"    }",
+											"};",
+											"// get last tea from teas index to pass as parameters within JSON body for POST request:",
+											"pm.sendRequest(getRequest, (error, response) => {",
+											"    if (error) {",
+											"        console.log(error);",
+											"    } else {",
+											"        var jsonData = response.json();",
+											"        var last = jsonData['data'].pop();",
+											"        pm.environment.set('tea_id', last['id']);",
+											"        pm.environment.set('title', last['attributes']['name']);",
+											"        pm.environment.set('description', last['attributes']['description']);",
+											"        pm.environment.set('temperature', last['attributes']['temperature']);",
+											"        pm.environment.set('brew_time', last['attributes']['brew_time']);",
+											"    };",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful POST Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(201);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    var subscriptionId = jsonData['data']['id'];",
+											"    pm.expect(subscriptionId).not.to.be.null;",
+											"    // assign subscriptionId variable for PATCH requests:",
+											"    pm.environment.set('subscription_id', subscriptionId);",
+											"    pm.expect(jsonData['data']['type']).to.eql('subscription');",
+											"    // assign variable alias for 'attributes' property:",
+											"    var attributes = jsonData['data']['attributes'];",
+											"    pm.expect(Object.keys(attributes).length).to.eql(9);",
+											"    pm.expect(attributes['customer_id']).to.eql(parseInt(pm.environment.get(\"customer_id\")));",
+											"    pm.expect(attributes['tea_id']).to.eql(pm.environment.get(\"tea_id\"));",
+											"    pm.expect(attributes['title']).to.eql(pm.environment.get(\"title\"));",
+											"    pm.expect(attributes['description']).to.eql(pm.environment.get(\"description\"));",
+											"    pm.expect(attributes['temperature']).to.eql(pm.environment.get(\"temperature\"));",
+											"    pm.expect(attributes['brew_time']).to.eql(pm.environment.get(\"brew_time\"));",
+											"    pm.expect(attributes['price']).not.to.be.null;",
+											"    pm.expect(attributes['frequency']).not.to.be.null;",
+											"    pm.expect(attributes['status']).not.to.be.null;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"{{title}}\",\n    \"description\": \"{{description}}\",\n    \"temperature\": {{temperature}},\n    \"brew_time\": {{brew_time}},\n    \"tea_id\": \"{{tea_id}}\",\n    \"price\": 9.50,\n    \"frequency\": \"Weekly\",\n    \"status\": \"Active\",\n    \"customer_id\": {{customer_id}}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"{{customer_id}}",
+										"subscriptions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sad Path (Empty Body)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unsuccessful POST Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(422);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    // assign variable alias for 'errors' property:",
+											"    var errors = jsonData['errors'];",
+											"    pm.expect(errors).not.to.be.null;",
+											"    pm.expect(errors.length).to.eql(10);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"{{customer_id}}",
+										"subscriptions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sad Path (Invalid Customer ID)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unsuccessful POST Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(404);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    // assign variable alias for 'errors' property:",
+											"    var errors = jsonData['errors'];",
+											"    pm.expect(errors).to.eql([",
+											"        \"Couldn't find Customer with 'id'=foo\"",
+											"    ])",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/foo/subscriptions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"foo",
+										"subscriptions"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH /subscriptions/:id",
+					"item": [
+						{
+							"name": "Happy Path",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successful PATCH Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(200);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData['data']['id']).not.to.be.null;",
+											"    pm.expect(jsonData['data']['type']).to.eql('subscription');",
+											"    // assign variable alias for 'attributes' property:",
+											"    var attributes = jsonData['data']['attributes'];",
+											"    pm.expect(Object.keys(attributes).length).to.eql(9);",
+											"    pm.expect(attributes['customer_id']).to.eql(parseInt(pm.environment.get(\"customer_id\")));",
+											"    pm.expect(attributes['tea_id']).to.eql(pm.environment.get(\"tea_id\"));",
+											"    pm.expect(attributes['title']).to.eql(pm.environment.get(\"title\"));",
+											"    pm.expect(attributes['description']).to.eql(pm.environment.get(\"description\"));",
+											"    pm.expect(attributes['temperature']).to.eql(pm.environment.get(\"temperature\"));",
+											"    pm.expect(attributes['brew_time']).to.eql(pm.environment.get(\"brew_time\"));",
+											"    pm.expect(attributes['price']).not.to.be.null;",
+											"    pm.expect(attributes['frequency']).not.to.be.null;",
+											"    pm.expect(attributes['status']).to.eql('Cancelled');",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"Cancelled\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions/{{subscription_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"{{customer_id}}",
+										"subscriptions",
+										"{{subscription_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sad Path (Invalid Body)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unsuccessful PATCH Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(422);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    // assign variable alias for 'errors' property:",
+											"    var errors = jsonData['errors'];",
+											"    pm.expect(errors).to.eql([",
+											"        \"'Foo' is not a valid status\"",
+											"    ])",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"Foo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions/{{subscription_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"{{customer_id}}",
+										"subscriptions",
+										"{{subscription_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sad Path (Invalid Subscription ID)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Unsuccessful PATCH Request\", function () {",
+											"    pm.expect(pm.response.code).to.eql(404);",
+											"});",
+											"",
+											"pm.test(\"JSON Response Validation\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    // assign variable alias for 'errors' property:",
+											"    var errors = jsonData['errors'];",
+											"    pm.expect(errors).to.eql([",
+											"        \"Couldn't find Subscription with 'id'=bar\"",
+											"    ])",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"Cancelled\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions/bar",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"customers",
+										"{{customer_id}}",
+										"subscriptions",
+										"bar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GET /subscriptions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful GET Request\", function () {",
+									"    pm.expect(pm.response.code).to.eql(200);",
+									"});",
+									"",
+									"pm.test(\"JSON Response Validation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['data']).not.to.be.null;",
+									"    // Call .forEach on JSON 'data' array to iterate through objects:",
+									"    jsonData['data'].forEach(function(s) {",
+									"        pm.expect(s['id']).not.to.be.null;",
+									"        pm.expect(s['type']).to.eql('subscription');",
+									"        // assign variable alias for 'attributes' property:",
+									"        var attributes = s['attributes'];",
+									"        pm.expect(Object.keys(attributes).length).to.eql(9);",
+									"        pm.expect(attributes['customer_id']).to.eql(parseInt(pm.environment.get(\"customer_id\")));",
+									"        pm.expect(attributes['tea_id']).not.to.be.null;",
+									"        pm.expect(attributes['title']).not.to.be.null;",
+									"        pm.expect(attributes['description']).not.to.be.null;",
+									"        pm.expect(attributes['temperature']).not.to.be.null;",
+									"        pm.expect(attributes['brew_time']).not.to.be.null;",
+									"        pm.expect(attributes['price']).not.to.be.null;",
+									"        pm.expect(attributes['frequency']).not.to.be.null;",
+									"        pm.expect(attributes['status']).not.to.be.null;",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customers/{{customer_id}}/subscriptions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"customers",
+								"{{customer_id}}",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
