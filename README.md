@@ -150,7 +150,6 @@ This project requires Ruby 2.7.2 and Rails 5.2.6.
 
 ### <ins>Endpoint Documentation</ins>
 
-
 The `base path` of each endpoint is:
 
 ```
@@ -159,17 +158,20 @@ The `base path` of each endpoint is:
 
 - For `GET` requests, you can send the requests through your internet browser, or utilize an API client (i.e. [Postman](https://www.postman.com/))
 - For `POST` or `PATCH` requests, you will need to use an API client to provide the required request body
-<!-- TODO: add Postman collection after check-in -->
-- A fully functional [Postman collection](#) is included with this repository, to further assist with UAT and endpoint exploration
+- A fully functional [Postman collection](https://github.com/tvaroglu/mr_tea/blob/main/postman_suite) is included with this repository, to further assist with UAT and endpoint exploration
 
 #### Tea Endpoint
+
 *Get all teas*
+
 ```
 GET /api/v1/teas
 ```
+
 **Example Response:**
 
 200 (OK)
+
 ```json
 {
     "data": [
@@ -278,13 +280,17 @@ GET /api/v1/teas
 ```
 
 #### Subscription Endpoints
+
 *Create a new tea subscription for an existing customer*
 
 **Example Request:**
+
 ```
 POST /api/v1/customers/{:id}/subscriptions
 ```
+
 With the following `JSON` body:
+
 ```json
 {
     "title": "yellow",
@@ -298,9 +304,11 @@ With the following `JSON` body:
     "customer_id": 3
 }
 ```
+
 **Example Response:**
 
 201 (Created)
+
 ```json
 {
     "data": {
@@ -320,17 +328,23 @@ With the following `JSON` body:
     }
 }
 ```
+
 **Example Request:**
+
 ```
 POST /api/v1/customers/{:id}/subscriptions
 ```
+
 With the following `JSON` body:
+
 ```json
 {}
 ```
+
 **Example Response:**
 
 422 (Unprocessable Entity)
+
 ```json
 {
     "errors": [
@@ -347,13 +361,17 @@ With the following `JSON` body:
     ]
 }
 ```
+
 **Example Request:**
+
 ```
 POST /api/v1/customers/foo/subscriptions
 ```
+
 **Example Response:**
 
 404 (Not Found)
+
 ```json
 {
     "errors": [
@@ -361,22 +379,29 @@ POST /api/v1/customers/foo/subscriptions
     ]
 }
 ```
+
 ---
+
 *Cancel an existing tea subscription*
 
 **Example Request:**
+
 ```
 PATCH /api/v1/customers/{:customer_id}/subscriptions/{:id}
 ```
+
 With the following `JSON` body:
+
 ```json
 {
     "status": "Cancelled"
 }
 ```
+
 **Example Response:**
 
 200 (OK)
+
 ```json
 {
     "data": {
@@ -396,19 +421,25 @@ With the following `JSON` body:
     }
 }
 ```
+
 **Example Request:**
+
 ```
 PATCH /api/v1/customers/{:customer_id}/subscriptions/{:id}
 ```
+
 With the following `JSON` body:
+
 ```json
 {
     "status": "Foo"
 }
 ```
+
 **Example Response:**
 
 422 (Unprocessable Entity)
+
 ```json
 {
     "errors": [
@@ -416,13 +447,17 @@ With the following `JSON` body:
     ]
 }
 ```
+
 **Example Request:**
+
 ```
 PATCH /api/v1/customers/{:customer_id}/subscriptions/bar
 ```
+
 **Example Response:**
 
 404 (Not Found)
+
 ```json
 {
     "errors": [
@@ -430,16 +465,21 @@ PATCH /api/v1/customers/{:customer_id}/subscriptions/bar
     ]
 }
 ```
+
 ---
+
 *Get all tea subscriptions for an existing customer*
 
 **Example Request:**
+
 ```
 GET /api/v1/customers/{:id}/subscriptions
 ```
+
 **Example Response:**
 
 200 (OK)
+
 ```json
 {
     "data": [
