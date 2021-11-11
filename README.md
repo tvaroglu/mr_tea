@@ -162,8 +162,321 @@ The `base path` of each endpoint is:
 <!-- TODO: add Postman collection after check-in -->
 - A fully functional [Postman collection](#) is included with this repository, to further assist with UAT and endpoint exploration
 
+#### Tea Endpoint
+*Get all teas*
+```
+GET /api/v1/teas
+```
+**Example Response:**
 
-<!-- TODO: add JSON contracts (with help of Postman collection) after check-in -->
+200 (OK)
+```json
+{
+    "data": [
+        {
+            "id": "5fa3fd48d5ba620017ec1c09",
+            "type": "tea",
+            "attributes": {
+                "name": "green",
+                "description": "Rich in antioxidants and reduces inflammation.",
+                "temperature": 80,
+                "brew_time": 2
+            }
+        },
+        {
+            "id": "5fa3fdb0d5ba620017ec1c0a",
+            "type": "tea",
+            "attributes": {
+                "name": "black",
+                "description": "Boosts heart health and lowers cholesterol.",
+                "temperature": 85,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa3fe47d5ba620017ec1c0b",
+            "type": "tea",
+            "attributes": {
+                "name": "chamomile",
+                "description": "Lowers blood sugar and prevents osteoporosis.",
+                "temperature": 93,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa3feb2d5ba620017ec1c0c",
+            "type": "tea",
+            "attributes": {
+                "name": "hibiscus",
+                "description": "Lowers blood pressure and boosts liver health.",
+                "temperature": 93,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa3ff13d5ba620017ec1c0d",
+            "type": "tea",
+            "attributes": {
+                "name": "jasmine",
+                "description": "Relieves stress and helps in weight loss.",
+                "temperature": 80,
+                "brew_time": 2
+            }
+        },
+        {
+            "id": "5fa3ff74d5ba620017ec1c0e",
+            "type": "tea",
+            "attributes": {
+                "name": "mate",
+                "description": "Boosts energy and mental focus.",
+                "temperature": 80,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa3ffbbd5ba620017ec1c0f",
+            "type": "tea",
+            "attributes": {
+                "name": "oolong",
+                "description": "Lowers risk of cancer and prevents diabetes.",
+                "temperature": 80,
+                "brew_time": 2
+            }
+        },
+        {
+            "id": "5fa40008d5ba620017ec1c10",
+            "type": "tea",
+            "attributes": {
+                "name": "pu-erh",
+                "description": "Protects bone health and reduces stress.",
+                "temperature": 87,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa40087d5ba620017ec1c11",
+            "type": "tea",
+            "attributes": {
+                "name": "peppermint",
+                "description": "Relieves headaches and improves digestion.",
+                "temperature": 93,
+                "brew_time": 3
+            }
+        },
+        {
+            "id": "5fa40117d5ba620017ec1c12",
+            "type": "tea",
+            "attributes": {
+                "name": "rooibos",
+                "description": "Good for heart health, digestion and skin.",
+                "temperature": 100,
+                "brew_time": 5
+            }
+        }
+    ]
+}
+```
+
+#### Subscription Endpoints
+*Create a new tea subscription for an existing customer*
+
+**Example Request:**
+```
+POST /api/v1/customers/{:id}/subscriptions
+```
+With the following `JSON` body:
+```json
+{
+    "title": "yellow",
+    "description": "Strengthens bones and lowers cholesterol.",
+    "temperature": 75,
+    "brew_time": 3,
+    "tea_id": "5fa402618765bf0017f09759",
+    "price": 9.5,
+    "frequency": "Weekly",
+    "status": "Active",
+    "customer_id": 3
+}
+```
+**Example Response:**
+
+201 (Created)
+```json
+{
+    "data": {
+        "id": "4",
+        "type": "subscription",
+        "attributes": {
+            "customer_id": 3,
+            "tea_id": "5fa402618765bf0017f09759",
+            "title": "yellow",
+            "description": "Strengthens bones and lowers cholesterol.",
+            "temperature": 75,
+            "brew_time": 3,
+            "price": 9.5,
+            "frequency": "Weekly",
+            "status": "Active"
+        }
+    }
+}
+```
+**Example Request:**
+```
+POST /api/v1/customers/{:id}/subscriptions
+```
+With the following `JSON` body:
+```json
+{}
+```
+**Example Response:**
+
+422 (Unprocessable Entity)
+```json
+{
+    "errors": [
+        "Tea can't be blank",
+        "Description can't be blank",
+        "Temperature can't be blank",
+        "Temperature is not a number",
+        "Brew time can't be blank",
+        "Brew time is not a number",
+        "Price can't be blank",
+        "Price is not a number",
+        "Frequency can't be blank",
+        "Status can't be blank"
+    ]
+}
+```
+**Example Request:**
+```
+POST /api/v1/customers/foo/subscriptions
+```
+**Example Response:**
+
+404 (Not Found)
+```json
+{
+    "errors": [
+        "Couldn't find Customer with 'id'=foo"
+    ]
+}
+```
+---
+*Cancel an existing tea subscription*
+
+**Example Request:**
+```
+PATCH /api/v1/customers/{:customer_id}/subscriptions/{:id}
+```
+With the following `JSON` body:
+```json
+{
+    "status": "Cancelled"
+}
+```
+**Example Response:**
+
+200 (OK)
+```json
+{
+    "data": {
+        "id": "4",
+        "type": "subscription",
+        "attributes": {
+            "customer_id": 3,
+            "tea_id": "5fa402618765bf0017f09759",
+            "title": "yellow",
+            "description": "Strengthens bones and lowers cholesterol.",
+            "temperature": 75,
+            "brew_time": 3,
+            "price": 9.5,
+            "frequency": "Weekly",
+            "status": "Cancelled"
+        }
+    }
+}
+```
+**Example Request:**
+```
+PATCH /api/v1/customers/{:customer_id}/subscriptions/{:id}
+```
+With the following `JSON` body:
+```json
+{
+    "status": "Foo"
+}
+```
+**Example Response:**
+
+422 (Unprocessable Entity)
+```json
+{
+    "errors": [
+        "'Foo' is not a valid status"
+    ]
+}
+```
+**Example Request:**
+```
+PATCH /api/v1/customers/{:customer_id}/subscriptions/bar
+```
+**Example Response:**
+
+404 (Not Found)
+```json
+{
+    "errors": [
+        "Couldn't find Subscription with 'id'=bar"
+    ]
+}
+```
+---
+*Get all tea subscriptions for an existing customer*
+
+**Example Request:**
+```
+GET /api/v1/customers/{:id}/subscriptions
+```
+**Example Response:**
+
+200 (OK)
+```json
+{
+    "data": [
+        {
+            "id": "4",
+            "type": "subscription",
+            "attributes": {
+                "customer_id": 3,
+                "tea_id": "5fa402618765bf0017f09759",
+                "title": "yellow",
+                "description": "Strengthens bones and lowers cholesterol.",
+                "temperature": 75,
+                "brew_time": 3,
+                "price": 9.5,
+                "frequency": "Weekly",
+                "status": "Active"
+            }
+        },
+        {
+            "id": "5",
+            "type": "subscription",
+            "attributes": {
+                "customer_id": 3,
+                "tea_id": "5fa402618765bf0017f09759",
+                "title": "yellow",
+                "description": "Strengthens bones and lowers cholesterol.",
+                "temperature": 75,
+                "brew_time": 3,
+                "price": 9.5,
+                "frequency": "Weekly",
+                "status": "Cancelled"
+            }
+        }
+    ]
+}
+```
+
 
 ### Schema Diagram
 <img src="https://user-images.githubusercontent.com/58891447/141157680-59fc564c-c0fb-46fe-8dd9-9cb5384b6f53.png" width=100%>
